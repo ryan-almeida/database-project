@@ -14,4 +14,4 @@ This is a great project to familiarize yourself with various database technologi
 - Utilizing API Gateway and Lambda to handle various API calls highlights RESTful API design and serverless application development
 
 ## Architecture Diagram:
-![Alt text](architecture.png)
+![Alt text](architecture.PNG)
