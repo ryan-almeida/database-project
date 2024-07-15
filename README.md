@@ -15,17 +15,21 @@ This is a great project to familiarize yourself with various database technologi
 ## Architecture Diagram:
 ![Alt text](architecture.PNG)
 
-## Architecture Description:
+## Components Description:
 
 | Component     | Functionality |
 | ------------- | ------------- |
 | DynamoDB      | Stores the product catalog; provides a durable, scalable NoSQL database for managing item data  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| Amazon Elasticsearch | Enables fast and accurate search functionality within the product catalog; indexes data for efficient querying  |
+| DynamoDB Streams  |Captures changes made to the DynamoDB table, allowing for event-driven processing using AWS Lambda.  |
+| AWS Lambda  |Executes code in response to events (e.g., DynamoDB Streams updates); used for updating Elasticsearch and handling API requests.|
+| Elasticache for Redis  |Provides in-memory caching to quickly retrieve best sellers list and other frequently accessed data.  |
+|Amazon Neptune  | Powers social recommendations through a graph database, facilitating complex queries on relationships and interactions  |
+|API Gateway  | Manages API endpoints for the web storefront; provides a secure and scalable entry point for API requests. |
+| Amazon S3 | Used to store the static web files |
+| CloudFront | Cache the web static files at edge locations for faster accessibility  |
+| Cognito  | Manage user management  |
+| CloudWatch  | Monitor AWS resources based on defined metrics  |
 
 ## Functional Requirements:
 - Search Functionality - Ensure books can be searched inside a search box and results can be returned to users quickly and accurately
@@ -34,9 +38,35 @@ This is a great project to familiarize yourself with various database technologi
 - Personalized recommendations - Offer social recommendations based on user interactions and preferences
 
 ## Non-Functional Requirements:
-- Scalability - Ensure the application can handle increasing loads by leveraging the scalability features of AWS services
-- Availability 
-- Performance
-- Security
-- Cost Efficiency 
+- Scalability: The application must handle increasing loads automatically and without performance degradationby.
+    - DynamoDB: Automatically scales up and down to accommodate varying loads without manual intervention
+    - Amazon Elasticsearch: Scalable search capabilities to handle growing data and query volumes.
+    - Elasticache for Redis: In-memory caching scales horizontally to manage increased demand.
+    - API Gateway and Lambda: Serverless architecture that scales automatically with the number of API requests.
+- Availability: The application must be available and operational 99.9% of the time or higher.
+    - DynamoDB: Offers high availability with multi-AZ (Availability Zone) replication.
+    - Amazon Elasticsearch: Provides multi-AZ deployment options to ensure search service availability.
+    - Elasticache for Redis: Supports replication and automatic failover to ensure continuous availability.
+    - Amazon Neptune: Multi-AZ architecture ensures high availability for the graph database.
+    - API Gateway and Lambda: Both services are designed for high availability and reliability.
+- Performance: The application must respond to user requests with minimal latency.
+    - DynamoDB: Low latency response times with SSD-backed storage.
+    - Amazon Elasticsearch: Fast and efficient search indexing and querying.
+    - Elasticache for Redis: Provides sub-millisecond response times for frequently accessed data.
+    - AWS Lambda: Executes code in milliseconds, ensuring quick processing of API requests and data updates.
+    - API Gateway: Optimizes API request handling with low latency.
+- Security: The application must ensure data security and integrity.
+    - DynamoDB: Encryption at rest and in transit, along with fine-grained access control via IAM.
+    - Amazon Elasticsearch: Secure data transmission with HTTPS and VPC-based access control.
+    - Elasticache for Redis: Supports encryption in transit and at rest, with IAM authentication.
+    - Amazon Neptune: Provides encryption at rest and secure access control mechanisms.
+    - API Gateway: Supports SSL/TLS encryption, IAM roles, and API keys for secure access control.
+    - AWS Lambda: Encrypted environment variables and IAM roles to manage permissions securely.
+- Cost Efficiency: The application must optimize costs while delivering required performance and reliability
+    - DynamoDB: Pay-per-use pricing model, with on-demand and provisioned capacity modes to manage costs.
+    - Amazon Elasticsearch: Pricing based on the number of instances and storage used, with options to optimize search costs.
+    - Elasticache for Redis: Pay for the resources consumed, with cost-effective scaling options.
+    - AWS Lambda: Pay only for the compute time used, with no charges when the code is not running.
+    - API Gateway: Pay-per-request pricing model, allowing cost management based on usage.
+
 
